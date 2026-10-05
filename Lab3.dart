@@ -59,7 +59,7 @@ class OrderLog {
   static OrderLog? _instance;
   final List<String> entries = [];
 
-  OrderLog._internal(); // private named constructor
+  OrderLog._internal(); 
 
   factory OrderLog() {
     _instance ??= OrderLog._internal();
@@ -67,7 +67,7 @@ class OrderLog {
   }
 
   void add(String msg) => entries.add(msg);
-
+}
 class OrderLine {
   final MenuItem item;
   final int qty;
@@ -227,7 +227,7 @@ void step5() {
   print('Step 5: total=${line.total} tax=${line.tax}');
 
   try {
-    OrderLine(line.item, 0); 
+    OrderLine(line.item, 0); // line = your mainOrder() result
     print('Step 5: assert did NOT fire');
   } on AssertionError {
     print('Step 5: assert fired');
@@ -256,7 +256,7 @@ void step7() {
   card.balance = balanceCap - u;
   print('Step 7: reset -> ${card.balance}');
 
-  card.balance = card.balance - mainOrder().grand; 
+  card.balance = card.balance - mainOrder().grand; // pay the main order
   print('Step 7: paid order -> ${card.balance}');
 }
 
