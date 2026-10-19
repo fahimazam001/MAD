@@ -1,32 +1,32 @@
 // main.dart - Study Tracker lab
 
 // Step 1 Think Answer:
-// - runApp receives the root widget of the entire application (e.g., LabApp), 
+// - runApp receives the root widget of the entire application (e.g., LabApp),
 //   which sets up the app framework and core app-level configurations.
-// - MaterialApp receives as 'home' the default/initial screen route (e.g., HomePage) 
+// - MaterialApp receives as 'home' the default/initial screen route (e.g., HomePage)
 //   that is displayed to the user when the app first launches.
 
 // Step 2 Think Answer:
-// - Why are the fields of a StatelessWidget final? 
+// - Why are the fields of a StatelessWidget final?
 //   Because a StatelessWidget is immutable (unchangeable) once created; its configuration cannot change over time.
-// - What would the compiler say if you removed final? 
+// - What would the compiler say if you removed final?
 //   The compiler would throw an error stating that mutable fields are not allowed in an immutable widget class.
 
 // Step 3 Think Answer:
 // - Widget tree levels down to Text('Max: ..'):
-//   1. LabApp -> 2. MaterialApp -> 3. HomePage -> 4. Scaffold 
+//   1. LabApp -> 2. MaterialApp -> 3. HomePage -> 4. Scaffold
 //   -> 5. SingleChildScrollView -> 6. Column -> 7. Row -> 8. Text('Max: ...')
 //   Total depth: 8 levels from the root.
 
 // Step 4 Think Answer:
-// - Why does GoalBanner not need setState? 
+// - Why does GoalBanner not need setState?
 //   Because GoalBanner is a StatelessWidget; it is immutable and purely a reflection of its given input properties (count and max).
-// - What would you have to do to make it show a new count? 
+// - What would you have to do to make it show a new count?
 //   Its parent widget must be rebuilt with a new `count` value passed into GoalBanner's constructor.
 
 // Step 5 Think Answer:
-// - The class Tally has no fields that change, yet _TallyState does. Why are there two classes? 
-//   Because widgets are immutable configuration blueprints that get recreated frequently as the UI updates, 
+// - The class Tally has no fields that change, yet _TallyState does. Why are there two classes?
+//   Because widgets are immutable configuration blueprints that get recreated frequently as the UI updates,
 //   while the State object persists across these rebuilds to remember and manage the mutable data.
 
 // Step 6 Think Answer:
@@ -34,21 +34,22 @@
 // - Hot restart vs Hot reload: Hot restart resets the application entirely, wiping out the State object and re-running main(), which resets the count back to startCount.
 
 // Step 7 Think Answer:
-// - Before the fix, if you tapped three times, the value of _clicks inside the State was incremented (e.g., 3 * bugStep), 
+// - Before the fix, if you tapped three times, the value of _clicks inside the State was incremented (e.g., 3 * bugStep),
 //   but the screen showed 0 because without setState, Flutter was never notified to rebuild the widget and update the UI.
 
 // Step 8 Think Answer:
-// - What error appears if you delete _timer.cancel() from dispose and the widget is removed? 
-//   A "setState() called after dispose()" error or a pending timer callback trying to execute on an unmounted State object, 
+// - What error appears if you delete _timer.cancel() from dispose and the widget is removed?
+//   A "setState() called after dispose()" error or a pending timer callback trying to execute on an unmounted State object,
 //   which can cause memory leaks or runtime exceptions.
 
 // Step 9 Think Answer:
-// - Why does it increase by one per second and not by two? 
+// - Why does it increase by one per second and not by two?
 //   Because the timer triggers once per second, calling setState which triggers a single build for the Countdown widget.
-// - Where could you print lifecycleLog to prove that dispose ran? 
+// - Where could you print lifecycleLog to prove that dispose ran?
 //   Inside a button's onPressed callback or right before program termination/removal, using `print(lifecycleLog)`.
 
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 const String studentName = 'Fahim Azam';
@@ -60,8 +61,16 @@ final int t = seed ~/ 10; // tens digit
 final int u = seed % 10; // units digit
 
 const List<String> courses = [
-  'Mobile Dev', 'Data Structures', 'Operating Systems', 'Databases',
-  'Networks', 'Software Eng', 'AI', 'Web Engineering', 'Graphics', 'Security',
+  'Mobile Dev',
+  'Data Structures',
+  'Operating Systems',
+  'Databases',
+  'Networks',
+  'Software Eng',
+  'AI',
+  'Web Engineering',
+  'Graphics',
+  'Security',
 ];
 
 final String course = courses[u]; // your course name
@@ -77,38 +86,30 @@ final List<String> lifecycleLog = <String>[];
 
 void main() => runApp(const LabApp());
 
-// Keep the name LabApp and its const constructor: the checker uses them.
+// // Stateless: root app widget with static configuration.
 class LabApp extends StatelessWidget {
   const LabApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      title: 'Study Tracker',
-      home: HomePage(),
-    );
+    return const MaterialApp(title: 'Study Tracker', home: HomePage());
   }
 }
 
+// // Stateless: initial screen route holding the main layout container.
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Study Tracker: $course'),
-      ),
+      appBar: AppBar(title: Text('Study Tracker: $course')),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const StudentCard(
-              name: studentName,
-              roll: rollNo,
-              course: course,
-            ),
+             StudentCard(name: studentName, roll: rollNo, course: course),
             const SizedBox(height: 12),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -131,7 +132,7 @@ class HomePage extends StatelessWidget {
   }
 }
 
-// Step 2: StudentCard widget implementation
+// // Stateless: displays static student info in a card layout.
 class StudentCard extends StatelessWidget {
   const StudentCard({
     super.key,
@@ -163,13 +164,9 @@ class StudentCard extends StatelessWidget {
   }
 }
 
-// Step 4: GoalBanner widget implementation
+// // Stateless: renders a progress text banner based on current count and max.
 class GoalBanner extends StatelessWidget {
-  const GoalBanner({
-    super.key,
-    required this.count,
-    required this.max,
-  });
+  const GoalBanner({super.key, required this.count, required this.max});
 
   final int count;
   final int max;
@@ -177,11 +174,14 @@ class GoalBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final percent = count * 100 ~/ max;
-    return Text('Progress: $count of $max ($percent%)', key: const Key('progress'));
+    return Text(
+      'Progress: $count of $max ($percent%)',
+      key: const Key('progress'),
+    );
   }
 }
 
-// Step 5 & 6: Tally StatefulWidget and State implementation
+// // Stateful: manages mutable count state and user interaction buttons.
 class Tally extends StatefulWidget {
   const Tally({super.key});
 
@@ -251,7 +251,7 @@ class _TallyState extends State<Tally> {
   }
 }
 
-// ---- Step 7: BuggyCounter widget (fixed with setState)
+// // Stateful: provides a counter with intentional bug fix demonstrating setState.
 class BuggyCounter extends StatefulWidget {
   const BuggyCounter({super.key});
 
@@ -282,7 +282,7 @@ class _BuggyCounterState extends State<BuggyCounter> {
   }
 }
 
-// ---- Step 9: Countdown StatefulWidget with builds count and lifecycle log
+// // Stateful: handles periodic timer lifecycle and build count tracking.
 class Countdown extends StatefulWidget {
   const Countdown({super.key});
 
@@ -321,7 +321,7 @@ class _CountdownState extends State<Countdown> {
       children: [
         _left > 0
             ? Text('Time left: $_left s', key: const Key('time-left'))
-            : const Text('Time is up!', key: const Key('time-left')),
+            : Text('Time is up!', key: const Key('time-left')),
         const SizedBox(height: 4),
         Text('Builds: $_builds', key: const Key('builds')),
       ],
