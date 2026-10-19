@@ -29,6 +29,10 @@
 //   Because widgets are immutable configuration blueprints that get recreated frequently as the UI updates, 
 //   while the State object persists across these rebuilds to remember and manage the mutable data.
 
+// Step 6 Think Answer:
+// - Hot reload while the count is 12: Does it stay 12? Yes, because Hot Reload injects updated source code into the running Virtual Machine while preserving the existing State object.
+// - Hot restart vs Hot reload: Hot restart resets the application entirely, wiping out the State object and re-running main(), which resets the count back to startCount.
+
 import 'package:flutter/material.dart';
 
 const String studentName = 'Fahim Azam';
@@ -157,7 +161,7 @@ class GoalBanner extends StatelessWidget {
   }
 }
 
-// Step 5: Tally StatefulWidget implementation
+// Step 5 & 6: Tally StatefulWidget and State implementation
 class Tally extends StatefulWidget {
   const Tally({super.key});
 
@@ -171,6 +175,24 @@ class _TallyState extends State<Tally> {
   void _plus() {
     setState(() {
       _count += stepSize;
+      if (_count > maxCount) {
+        _count = maxCount;
+      }
+    });
+  }
+
+  void _minus() {
+    setState(() {
+      _count -= stepSize;
+      if (_count < 0) {
+        _count = 0;
+      }
+    });
+  }
+
+  void _reset() {
+    setState(() {
+      _count = startCount;
     });
   }
 
@@ -189,6 +211,18 @@ class _TallyState extends State<Tally> {
               key: const Key('plus'),
               onPressed: _plus,
               child: Text('+$stepSize'),
+            ),
+            const SizedBox(width: 8),
+            ElevatedButton(
+              key: const Key('minus'),
+              onPressed: _minus,
+              child: Text('-$stepSize'),
+            ),
+            const SizedBox(width: 8),
+            OutlinedButton(
+              key: const Key('reset'),
+              onPressed: _reset,
+              child: const Text('Reset'),
             ),
           ],
         ),
