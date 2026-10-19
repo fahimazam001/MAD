@@ -33,6 +33,10 @@
 // - Hot reload while the count is 12: Does it stay 12? Yes, because Hot Reload injects updated source code into the running Virtual Machine while preserving the existing State object.
 // - Hot restart vs Hot reload: Hot restart resets the application entirely, wiping out the State object and re-running main(), which resets the count back to startCount.
 
+// Step 7 Think Answer:
+// - Before the fix, if you tapped three times, the value of _clicks inside the State was incremented (e.g., 3 * bugStep), 
+//   but the screen showed 0 because without setState, Flutter was never notified to rebuild the widget and update the UI.
+
 import 'package:flutter/material.dart';
 
 const String studentName = 'Fahim Azam';
@@ -104,6 +108,8 @@ class HomePage extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             const Tally(),
+            const SizedBox(height: 12),
+            const BuggyCounter(),
           ],
         ),
       ),
@@ -231,7 +237,7 @@ class _TallyState extends State<Tally> {
   }
 }
 
-// ---- Provided for Step 7. It has a bug on purpose. Do not rename anything.
+// ---- Step 7: BuggyCounter widget (fixed with setState)
 class BuggyCounter extends StatefulWidget {
   const BuggyCounter({super.key});
 
@@ -251,7 +257,9 @@ class _BuggyCounterState extends State<BuggyCounter> {
         ElevatedButton(
           key: const Key('bug-button'),
           onPressed: () {
-            _clicks += bugStep;
+            setState(() {
+              _clicks += bugStep;
+            });
           },
           child: Text('+$bugStep'),
         ),
