@@ -1,4 +1,9 @@
 // main.dart - Study Tracker lab
+// Think Answer:
+// - runApp receives the root widget of the entire application (e.g., LabApp), 
+//   which sets up the app framework and core app-level configurations.
+// - MaterialApp receives as 'home' the default/initial screen route (e.g., HomePage) 
+//   that is displayed to the user when the app first launches.
 
 import 'package:flutter/material.dart';
 
@@ -34,10 +39,26 @@ class LabApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Step 1 replaces everything below.
-    return MaterialApp(
-      home: Scaffold(
-        body: Center(child: Text('Setup OK: seed $seed (t=$t, u=$u)')),
+    // Step 1: Updated to return MaterialApp with title and HomePage as home.
+    return const MaterialApp(
+      title: 'Study Tracker',
+      home: HomePage(),
+    );
+  }
+}
+
+// Step 1: Created HomePage StatelessWidget as required.
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Study Tracker: $course'),
+      ),
+      body: const Center(
+        child: Text('Hello'),
       ),
     );
   }
