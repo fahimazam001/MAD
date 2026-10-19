@@ -20,9 +20,14 @@
 
 // Step 4 Think Answer:
 // - Why does GoalBanner not need setState? 
-//   Because GoalBanner is a StatelessWidget; it is immutable and purely a reflection of its given input properties (count and max). It doesn't manage its own internal state.
+//   Because GoalBanner is a StatelessWidget; it is immutable and purely a reflection of its given input properties (count and max).
 // - What would you have to do to make it show a new count? 
-//   Its parent widget (e.g., HomePage) must be rebuilt with a new `count` value passed into GoalBanner's constructor.
+//   Its parent widget must be rebuilt with a new `count` value passed into GoalBanner's constructor.
+
+// Step 5 Think Answer:
+// - The class Tally has no fields that change, yet _TallyState does. Why are there two classes? 
+//   Because widgets are immutable configuration blueprints that get recreated frequently as the UI updates, 
+//   while the State object persists across these rebuilds to remember and manage the mutable data.
 
 import 'package:flutter/material.dart';
 
@@ -94,7 +99,7 @@ class HomePage extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 12),
-            GoalBanner(count: startCount, max: maxCount),
+            const Tally(),
           ],
         ),
       ),
@@ -149,6 +154,46 @@ class GoalBanner extends StatelessWidget {
   Widget build(BuildContext context) {
     final percent = count * 100 ~/ max;
     return Text('Progress: $count of $max ($percent%)', key: const Key('progress'));
+  }
+}
+
+// Step 5: Tally StatefulWidget implementation
+class Tally extends StatefulWidget {
+  const Tally({super.key});
+
+  @override
+  State<Tally> createState() => _TallyState();
+}
+
+class _TallyState extends State<Tally> {
+  int _count = startCount;
+
+  void _plus() {
+    setState(() {
+      _count += stepSize;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Count: $_count', key: const Key('count')),
+        const SizedBox(height: 8),
+        GoalBanner(count: _count, max: maxCount),
+        const SizedBox(height: 8),
+        Row(
+          children: [
+            ElevatedButton(
+              key: const Key('plus'),
+              onPressed: _plus,
+              child: Text('+$stepSize'),
+            ),
+          ],
+        ),
+      ],
+    );
   }
 }
 
