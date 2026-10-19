@@ -18,6 +18,12 @@
 //   -> 5. SingleChildScrollView -> 6. Column -> 7. Row -> 8. Text('Max: ...')
 //   Total depth: 8 levels from the root.
 
+// Step 4 Think Answer:
+// - Why does GoalBanner not need setState? 
+//   Because GoalBanner is a StatelessWidget; it is immutable and purely a reflection of its given input properties (count and max). It doesn't manage its own internal state.
+// - What would you have to do to make it show a new count? 
+//   Its parent widget (e.g., HomePage) must be rebuilt with a new `count` value passed into GoalBanner's constructor.
+
 import 'package:flutter/material.dart';
 
 const String studentName = 'Fahim Azam';
@@ -87,6 +93,8 @@ class HomePage extends StatelessWidget {
                 Text('Max: $maxCount', key: const Key('info-max')),
               ],
             ),
+            const SizedBox(height: 12),
+            GoalBanner(count: startCount, max: maxCount),
           ],
         ),
       ),
@@ -109,23 +117,38 @@ class StudentCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    setupCard() {
-      return Card(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text('Name: $name', key: const Key('student-name')),
-              Text('Roll no: $roll', key: const Key('student-roll')),
-              Text('Course: $course', key: const Key('student-course')),
-            ],
-          ),
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text('Name: $name', key: const Key('student-name')),
+            Text('Roll no: $roll', key: const Key('student-roll')),
+            Text('Course: $course', key: const Key('student-course')),
+          ],
         ),
-      );
-    }
-    return setupCard();
+      ),
+    );
+  }
+}
+
+// Step 4: GoalBanner widget implementation
+class GoalBanner extends StatelessWidget {
+  const GoalBanner({
+    super.key,
+    required this.count,
+    required this.max,
+  });
+
+  final int count;
+  final int max;
+
+  @override
+  Widget build(BuildContext context) {
+    final percent = count * 100 ~/ max;
+    return Text('Progress: $count of $max ($percent%)', key: const Key('progress'));
   }
 }
 
