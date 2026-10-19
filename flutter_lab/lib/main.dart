@@ -1,9 +1,16 @@
 // main.dart - Study Tracker lab
-// Think Answer:
+
+// Step 1 Think Answer:
 // - runApp receives the root widget of the entire application (e.g., LabApp), 
 //   which sets up the app framework and core app-level configurations.
 // - MaterialApp receives as 'home' the default/initial screen route (e.g., HomePage) 
 //   that is displayed to the user when the app first launches.
+
+// Step 2 Think Answer:
+// - Why are the fields of a StatelessWidget final? 
+//   Because a StatelessWidget is immutable (unchangeable) once created; its configuration cannot change over time.
+// - What would the compiler say if you removed final? 
+//   The compiler would throw an error stating that mutable fields are not allowed in an immutable widget class (e.g., "The instance variable must be final").
 
 import 'package:flutter/material.dart';
 
@@ -39,7 +46,6 @@ class LabApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Step 1: Updated to return MaterialApp with title and HomePage as home.
     return const MaterialApp(
       title: 'Study Tracker',
       home: HomePage(),
@@ -47,7 +53,6 @@ class LabApp extends StatelessWidget {
   }
 }
 
-// Step 1: Created HomePage StatelessWidget as required.
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
@@ -57,8 +62,42 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(
         title: Text('Study Tracker: $course'),
       ),
-      body: const Center(
-        child: Text('Hello'),
+      body: StudentCard(
+        name: studentName,
+        roll: rollNo,
+        course: course,
+      ),
+    );
+  }
+}
+
+// Step 2: StudentCard widget implementation
+class StudentCard extends StatelessWidget {
+  const StudentCard({
+    super.key,
+    required this.name,
+    required this.roll,
+    required this.course,
+  });
+
+  final String name;
+  final String roll;
+  final String course;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text('Name: $name', key: const Key('student-name')),
+            Text('Roll no: $roll', key: const Key('student-roll')),
+            Text('Course: $course', key: const Key('student-course')),
+          ],
+        ),
       ),
     );
   }
