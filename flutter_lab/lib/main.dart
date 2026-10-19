@@ -10,7 +10,13 @@
 // - Why are the fields of a StatelessWidget final? 
 //   Because a StatelessWidget is immutable (unchangeable) once created; its configuration cannot change over time.
 // - What would the compiler say if you removed final? 
-//   The compiler would throw an error stating that mutable fields are not allowed in an immutable widget class (e.g., "The instance variable must be final").
+//   The compiler would throw an error stating that mutable fields are not allowed in an immutable widget class.
+
+// Step 3 Think Answer:
+// - Widget tree levels down to Text('Max: ..'):
+//   1. LabApp -> 2. MaterialApp -> 3. HomePage -> 4. Scaffold 
+//   -> 5. SingleChildScrollView -> 6. Column -> 7. Row -> 8. Text('Max: ...')
+//   Total depth: 8 levels from the root.
 
 import 'package:flutter/material.dart';
 
@@ -62,10 +68,27 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(
         title: Text('Study Tracker: $course'),
       ),
-      body: StudentCard(
-        name: studentName,
-        roll: rollNo,
-        course: course,
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const StudentCard(
+              name: studentName,
+              roll: rollNo,
+              course: course,
+            ),
+            const SizedBox(height: 12),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Start: $startCount', key: const Key('info-start')),
+                Text('Step: $stepSize', key: const Key('info-step')),
+                Text('Max: $maxCount', key: const Key('info-max')),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -86,20 +109,23 @@ class StudentCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text('Name: $name', key: const Key('student-name')),
-            Text('Roll no: $roll', key: const Key('student-roll')),
-            Text('Course: $course', key: const Key('student-course')),
-          ],
+    setupCard() {
+      return Card(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('Name: $name', key: const Key('student-name')),
+              Text('Roll no: $roll', key: const Key('student-roll')),
+              Text('Course: $course', key: const Key('student-course')),
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    }
+    return setupCard();
   }
 }
 
