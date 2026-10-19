@@ -42,6 +42,12 @@
 //   A "setState() called after dispose()" error or a pending timer callback trying to execute on an unmounted State object, 
 //   which can cause memory leaks or runtime exceptions.
 
+// Step 9 Think Answer:
+// - Why does it increase by one per second and not by two? 
+//   Because the timer triggers once per second, calling setState which triggers a single build for the Countdown widget.
+// - Where could you print lifecycleLog to prove that dispose ran? 
+//   Inside a button's onPressed callback or right before program termination/removal, using `print(lifecycleLog)`.
+
 import 'dart:async';
 import 'package:flutter/material.dart';
 
@@ -276,7 +282,7 @@ class _BuggyCounterState extends State<BuggyCounter> {
   }
 }
 
-// ---- Step 8: Countdown StatefulWidget and State implementation
+// ---- Step 9: Countdown StatefulWidget with builds count and lifecycle log
 class Countdown extends StatefulWidget {
   const Countdown({super.key});
 
@@ -287,10 +293,12 @@ class Countdown extends StatefulWidget {
 class _CountdownState extends State<Countdown> {
   late int _left;
   late Timer _timer;
+  int _builds = 0;
 
   @override
   void initState() {
     super.initState();
+    lifecycleLog.add('initState');
     _left = startSeconds;
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() => _left--);
@@ -301,15 +309,22 @@ class _CountdownState extends State<Countdown> {
   @override
   void dispose() {
     _timer.cancel();
+    lifecycleLog.add('dispose');
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_left > 0) {
-      return Text('Time left: $_left s', key: const Key('time-left'));
-    } else {
-      return const Text('Time is up!', key: const Key('time-left'));
-    }
+    _builds++;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _left > 0
+            ? Text('Time left: $_left s', key: const Key('time-left'))
+            : const Text('Time is up!', key: const Key('time-left')),
+        const SizedBox(height: 4),
+        Text('Builds: $_builds', key: const Key('builds')),
+      ],
+    );
   }
 }
