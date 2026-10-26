@@ -1,5 +1,6 @@
 // main.dart - Team Board lab
 
+import 'dart:async';
 import 'package:flutter/material.dart';
 
 const String studentName = 'Fahim Azam';
@@ -94,6 +95,8 @@ class HomePage extends StatelessWidget {
           children: [
             const SettingsCard(),
             const SizedBox(height: 12),
+            const Clock(),
+            const SizedBox(height: 12),
             // Add each new widget BELOW the previous one, in the order the
             // steps tell you, with a SizedBox(height: 12) between widgets.
           ],
@@ -148,3 +151,43 @@ class SummaryRow extends StatelessWidget {
     );
   }
 }
+
+// ==========================================
+// Step 1: The Clock
+// ==========================================
+class Clock extends StatefulWidget {
+  const Clock({super.key});
+
+  @override
+  State<Clock> createState() => _ClockState();
+}
+
+class _ClockState extends State<Clock> {
+  late Timer _timer;
+  int _seconds = startSec;
+
+  @override
+  void initState() {
+    super.initState();
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      setState(() => _seconds += tick);
+      if (_seconds >= stopAt) timer.cancel(); // stop at your limit
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Text('Session: $_seconds s', key: const Key('clock'));
+  }
+}
+
+/*
+  Think Question Answer:
+  - Why do we start the Timer in initState and not inside build?
+    initState() is called exactly once when the State object is inserted into the widget tree. 
+    Starting the Timer here ensures it is initialized precisely once.
+  - What would happen to the speed of the clock if we started it in build?
+    If we started it inside build(), a new periodic timer would be created every single time 
+    the widget rebuilds (such as on every `setState()` tick). This would spawn multiple concurrent 
+    timers, causing memory leaks and making the clock tick exponentially faster and out of control.
+*/
