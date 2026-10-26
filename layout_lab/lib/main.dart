@@ -1,6 +1,7 @@
 // main.dart - Team Board lab
 
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 const String studentName = 'Fahim Azam';
@@ -12,12 +13,25 @@ final int t = seed ~/ 10; // tens digit
 final int u = seed % 10; // units digit
 
 const List<String> courses = [
-  'Mobile Dev', 'Data Structures', 'Operating Systems', 'Databases',
-  'Networks', 'Software Eng', 'AI', 'Web Engineering', 'Graphics', 'Security',
+  'Mobile Dev',
+  'Data Structures',
+  'Operating Systems',
+  'Databases',
+  'Networks',
+  'Software Eng',
+  'AI',
+  'Web Engineering',
+  'Graphics',
+  'Security',
 ];
 const List<String> names = ['Ali', 'Sara', 'Omar', 'Hina', 'Zain', 'Maya'];
 const List<String> mains = [
-  'start', 'center', 'end', 'spaceBetween', 'spaceAround', 'spaceEvenly',
+  'start',
+  'center',
+  'end',
+  'spaceBetween',
+  'spaceAround',
+  'spaceEvenly',
 ];
 const List<String> crosses = ['start', 'center', 'end'];
 const List<String> hues = ['teal', 'indigo', 'orange', 'pink', 'green'];
@@ -320,15 +334,25 @@ class Probe extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool above = context.findAncestorWidgetOfExactType<Scaffold>() != null;
+    final bool above =
+        context.findAncestorWidgetOfExactType<Scaffold>() != null;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text('Seen at: $seconds s', key: const Key('probe-seen')),
-        Text('Widget #${identityHashCode(this)}', key: const Key('probe-widget')),
-        Text('Element #${identityHashCode(context)}', key: const Key('probe-element')),
-        Text('Context belongs to: ${context.widget.runtimeType}', key: const Key('probe-context')),
+        Text(
+          'Widget #${identityHashCode(this)}',
+          key: const Key('probe-widget'),
+        ),
+        Text(
+          'Element #${identityHashCode(context)}',
+          key: const Key('probe-element'),
+        ),
+        Text(
+          'Context belongs to: ${context.widget.runtimeType}',
+          key: const Key('probe-context'),
+        ),
         Text('Scaffold above me: $above', key: const Key('probe-above')),
       ],
     );
@@ -344,10 +368,7 @@ class Welcome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Text(
-        'Welcome, $studentName',
-        key: const Key('welcome'),
-      ),
+      child: Text('Welcome, $studentName', key: const Key('welcome')),
     );
   }
 }
