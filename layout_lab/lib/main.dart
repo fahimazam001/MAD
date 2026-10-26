@@ -105,6 +105,8 @@ class HomePage extends StatelessWidget {
             const SizedBox(height: 12),
             const SummaryRow(), // Step 7.1
             const SizedBox(height: 12),
+            const ShareRow(), // Step 8.1
+            const SizedBox(height: 12),
             // Add each new widget BELOW the previous one, in the order the
             // steps tell you, with a SizedBox(height: 12) between widgets.
           ],
@@ -136,7 +138,44 @@ class SettingsCard extends StatelessWidget {
 }
 
 // ==========================================
-// Step 7: SummaryRow Widget (Updated with Expanded)
+// Step 8: ShareRow Widget
+// ==========================================
+class ShareRow extends StatelessWidget {
+  const ShareRow({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      key: const Key('share-row'),
+      children: [
+        SizedBox(
+          key: const Key('fixed'),
+          width: fixedW,
+          child: ElevatedButton(onPressed: () {}, child: const Text('F')),
+        ),
+        Expanded(
+          flex: flexA,
+          child: ElevatedButton(
+            key: const Key('exp'),
+            onPressed: () {},
+            child: const Text('Exp'),
+          ),
+        ),
+        Flexible(
+          flex: flexB,
+          child: ElevatedButton(
+            key: const Key('flex'),
+            onPressed: () {},
+            child: const Text('Flex'),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+// ==========================================
+// Step 7: SummaryRow Widget
 // ==========================================
 class SummaryRow extends StatelessWidget {
   const SummaryRow({super.key});
@@ -386,6 +425,12 @@ class InfoPanel extends StatelessWidget {
     );
   }
 }
+
+/*
+  Think Question Answer 8:
+  - What would change on the screen if you swapped Expanded and Flexible between the two buttons? Which one is “Flexible with fit: tight”?
+    If you swapped them, the button wrapped in `Expanded` would keep its natural small size while the one in `Flexible` would stretch to fill its allocated space. `Expanded` is essentially just a `Flexible` widget with `fit: FlexFit.tight`.
+*/
 
 /*
   Think Question Answer 7:
