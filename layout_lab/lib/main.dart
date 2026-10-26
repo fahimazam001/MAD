@@ -107,6 +107,8 @@ class HomePage extends StatelessWidget {
             const SizedBox(height: 12),
             const ShareRow(), // Step 8.1
             const SizedBox(height: 12),
+            const InfoBox(), // Step 9.2
+            const SizedBox(height: 12),
             // Add each new widget BELOW the previous one, in the order the
             // steps tell you, with a SizedBox(height: 12) between widgets.
           ],
@@ -133,6 +135,28 @@ class SettingsCard extends StatelessWidget {
       'stamp: top $dotTop, right $dotRight, bottom $dotBottom, left $dotLeft',
       key: const Key('settings'),
       style: const TextStyle(fontFamily: 'monospace', fontSize: 12),
+    );
+  }
+}
+
+// ==========================================
+// Step 9: InfoBox Widget
+// ==========================================
+class InfoBox extends StatelessWidget {
+  const InfoBox({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      key: const Key('info-box'),
+      margin: EdgeInsets.all(boxMargin),
+      padding: EdgeInsets.all(boxPad),
+      decoration: BoxDecoration(
+        color: swatches[hue]!.shade100,
+        borderRadius: BorderRadius.circular(boxRadius),
+        border: Border.all(width: boxBorder),
+      ),
+      child: Text('Course: $course', key: const Key('box-text')),
     );
   }
 }
@@ -426,6 +450,13 @@ class InfoPanel extends StatelessWidget {
   }
 }
 
+/*
+  Think Question Answer 9:
+  - Which one is inside the border, margin or padding?
+    **Padding** is inside the border (between the border and the child widget content), whereas **margin** is outside the border (spacing the container away from neighboring widgets).
+  - When would you use a plain Padding or SizedBox instead of a Container?
+    You would use a plain `Padding` widget when you only need inner spacing and want a lighter-weight widget. You would use a `SizedBox` when you specifically need to force a fixed width or height, or create simple empty spacing without extra decoration or margin overhead.
+*/
 /*
   Think Question Answer 8:
   - What would change on the screen if you swapped Expanded and Flexible between the two buttons? Which one is “Flexible with fit: tight”?
