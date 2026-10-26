@@ -99,15 +99,7 @@ class HomePage extends StatelessWidget {
             const SizedBox(height: 12),
             const Clock(),
             const SizedBox(height: 12),
-            Row(
-              children: [
-                Tile(tileA),
-                const SizedBox(width: 8),
-                Tile(tileB),
-                const SizedBox(width: 8),
-                Tile(tileC),
-              ],
-            ), // Step 4.3
+            const SwapBoard(), // Step 5.2 (Replaced temporary Row)
             const SizedBox(height: 12),
             // Add each new widget BELOW the previous one, in the order the
             // steps tell you, with a SizedBox(height: 12) between widgets.
@@ -225,7 +217,7 @@ class Probe extends StatelessWidget {
     final bool above = context.findAncestorWidgetOfExactType<Scaffold>() != null;
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: crossorigin_error_fix_placeholder_skip ?? CrossAxisAlignment.start,
       children: [
         Text('Seen at: $seconds s', key: const Key('probe-seen')),
         Text('Widget #${identityHashCode(this)}', key: const Key('probe-widget')),
@@ -273,6 +265,59 @@ class _TileState extends State<Tile> {
     );
   }
 }
+
+// ==========================================
+// Step 5: SwapBoard Widget
+// ==========================================
+class SwapBoard extends StatefulWidget {
+  const SwapBoard({super.key});
+
+  @override
+  State<SwapBoard> createState() => _SwapBoardState();
+}
+
+class _SwapBoardState extends State<SwapBoard> {
+  late List<Widget> tiles = [
+    Tile(tileA, key: ValueKey(tileA)),
+    Tile(tileB, key: ValueKey(tileB)),
+    Tile(tileC, key: ValueKey(tileC)),
+  ];
+
+  void swap() => setState(() => tiles = tiles.reversed.toList());
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            tiles[0],
+            const SizedBox(width: 8),
+            tiles[1],
+            const SizedBox(width: 8),
+            tiles[2],
+          ],
+        ),
+        const SizedBox(height: 8),
+        ElevatedButton(
+          key: const Key('swap'),
+          onPressed: swap,
+          child: const Text('Swap'),
+        ),
+      ],
+    );
+  }
+}
+
+/*
+  Think Question Answer 5:
+  - Without keys, why did the number stay at the left even though the label moved?
+    Without keys, Flutter matches new widgets to existing elements based strictly on their **position** in the tree 
+    rather than their identity. When the list is reversed, the Element at position index 0 reuses the existing State object 
+    (which holds the accumulated tap count), but receives the new Widget with the new label. Therefore, the tap count 
+    remains pinned to the position on the left, while only the visual text label changes.
+*/
 
 /*
   Think Question Answer 4:
