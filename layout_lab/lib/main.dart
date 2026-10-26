@@ -95,7 +95,19 @@ class HomePage extends StatelessWidget {
           children: [
             const SettingsCard(),
             const SizedBox(height: 12),
+            const Welcome(), // Step 4.1
+            const SizedBox(height: 12),
             const Clock(),
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                Tile(tileA),
+                const SizedBox(width: 8),
+                Tile(tileB),
+                const SizedBox(width: 8),
+                Tile(tileC),
+              ],
+            ), // Step 4.3
             const SizedBox(height: 12),
             // Add each new widget BELOW the previous one, in the order the
             // steps tell you, with a SizedBox(height: 12) between widgets.
@@ -225,6 +237,50 @@ class Probe extends StatelessWidget {
   }
 }
 
+// ==========================================
+// Step 4: Welcome & Tile Widgets
+// ==========================================
+class Welcome extends StatelessWidget {
+  const Welcome({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Text(
+        'Welcome, $studentName',
+        key: const Key('welcome'),
+      ),
+    );
+  }
+}
+
+class Tile extends StatefulWidget {
+  final String label;
+  const Tile(this.label, {super.key});
+
+  @override
+  State<Tile> createState() => _TileState();
+}
+
+class _TileState extends State<Tile> {
+  int taps = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: () => setState(() => taps++),
+      child: Text('${widget.label}: $taps'),
+    );
+  }
+}
+
+/*
+  Think Question Answer 4:
+  - You built Tile out of an ElevatedButton without writing extends ElevatedButton. What is this style called, and why does Flutter prefer it?
+    This style is called **Composition over Inheritance**. Flutter prefers composition because 
+    creating a deep custom subclass for every small visual change or behavior leads to rigid hierarchies, 
+    whereas composition allows you to assemble simple, reusable building blocks flexibly and maintainably.
+*/
 /*
   Think Question Answers 3:
   - Which of the two, Widget or Element, is “cheap and thrown away” and which one keeps the State?
