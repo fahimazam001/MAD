@@ -153,7 +153,7 @@ class SummaryRow extends StatelessWidget {
 }
 
 // ==========================================
-// Step 1 & 2: The Clock & Lifecycle
+// Step 1 & 2 & 3: The Clock, Lifecycle, & Probe
 // ==========================================
 class Clock extends StatefulWidget {
   const Clock({super.key});
@@ -194,10 +194,47 @@ class _ClockState extends State<Clock> {
         Text('Session: $_seconds s', key: const Key('clock')),
         const SizedBox(height: 4),
         Text('Builds: $_builds', key: const Key('builds')),
+        const SizedBox(height: 4),
+        Probe(seconds: _seconds), // Step 3: Probe widget without const
       ],
     );
   }
 }
+
+// ==========================================
+// Step 3: Probe Widget
+// ==========================================
+class Probe extends StatelessWidget {
+  final int seconds;
+  const Probe({super.key, required this.seconds});
+
+  @override
+  Widget build(BuildContext context) {
+    final bool above = context.findAncestorWidgetOfExactType<Scaffold>() != null;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Seen at: $seconds s', key: const Key('probe-seen')),
+        Text('Widget #${identityHashCode(this)}', key: const Key('probe-widget')),
+        Text('Element #${identityHashCode(context)}', key: const Key('probe-element')),
+        Text('Context belongs to: ${context.widget.runtimeType}', key: const Key('probe-context')),
+        Text('Scaffold above me: $above', key: const Key('probe-above')),
+      ],
+    );
+  }
+}
+
+/*
+  Think Question Answers 3:
+  - Which of the two, Widget or Element, is “cheap and thrown away” and which one keeps the State?
+    The Widget is cheap and thrown away (recreated on every build), whereas the Element stays 
+    persistent in the element tree. The State object is associated with the Element and is also 
+    preserved across widget rebuilds.
+  - Where is the third one, the RenderObject, and what is its job?
+    The RenderObject sits behind the Element in the RenderTree. Its job is to handle the actual 
+    layout, painting, and hit-testing on the screen (computing sizes and positioning pixels).
+*/
 
 /*
   Think Question Answers 2:
