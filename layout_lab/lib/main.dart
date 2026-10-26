@@ -153,7 +153,7 @@ class SummaryRow extends StatelessWidget {
 }
 
 // ==========================================
-// Step 1: The Clock
+// Step 1 & 2: The Clock & Lifecycle
 // ==========================================
 class Clock extends StatefulWidget {
   const Clock({super.key});
@@ -165,10 +165,13 @@ class Clock extends StatefulWidget {
 class _ClockState extends State<Clock> {
   late Timer _timer;
   int _seconds = startSec;
+  int _builds = 0; // Track number of builds
 
   @override
   void initState() {
     super.initState();
+    lifecycleLog.add('initState'); // Log initState
+
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() => _seconds += tick);
       if (_seconds >= stopAt) timer.cancel(); // stop at your limit
@@ -176,13 +179,40 @@ class _ClockState extends State<Clock> {
   }
 
   @override
+  void dispose() {
+    _timer.cancel(); // Cancel the active timer
+    lifecycleLog.add('dispose'); // Log dispose
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Text('Session: $_seconds s', key: const Key('clock'));
+    _builds++; // Increment build counter on every build
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Session: $_seconds s', key: const Key('clock')),
+        const SizedBox(height: 4),
+        Text('Builds: $_builds', key: const Key('builds')),
+      ],
+    );
   }
 }
 
 /*
-  Think Question Answer:
+  Think Question Answers 2:
+  - Why does Builds go up by one per second and not by two?
+    The `setState()` call inside the Timer callback triggers a single rebuild for the StatefulWidget 
+    per second. Even though `_seconds` increases by `tick` (which might be greater than 1), `setState()` 
+    is only called once per second, resulting in exactly one build per second.
+  - What error would you see in the console if the widget left the screen and _timer.cancel() was missing from dispose?
+    You would see a Flutter error related to calling `setState()` on a deactivated or unmounted widget 
+    (e.g., "setState() called after dispose()"), because the periodic timer would continue trying to fire 
+    and call `setState()` on a widget that no longer exists in the widget tree.
+*/
+
+/*
+  Think Question Answer 1:
   - Why do we start the Timer in initState and not inside build?
     initState() is called exactly once when the State object is inserted into the widget tree. 
     Starting the Timer here ensures it is initialized precisely once.
