@@ -103,6 +103,8 @@ class HomePage extends StatelessWidget {
             const SizedBox(height: 12),
             const InfoPanel(), // Step 6.1
             const SizedBox(height: 12),
+            const SummaryRow(), // Step 7.1
+            const SizedBox(height: 12),
             // Add each new widget BELOW the previous one, in the order the
             // steps tell you, with a SizedBox(height: 12) between widgets.
           ],
@@ -133,7 +135,9 @@ class SettingsCard extends StatelessWidget {
   }
 }
 
-// ---- Provided for Step 7. It overflows on purpose. Do not rename anything.
+// ==========================================
+// Step 7: SummaryRow Widget (Updated with Expanded)
+// ==========================================
 class SummaryRow extends StatelessWidget {
   const SummaryRow({super.key});
 
@@ -141,17 +145,23 @@ class SummaryRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Text(
-          'Part A: read the widget tree of the $course board from top to bottom.',
-          key: const Key('sum-a'),
+        Expanded(
+          child: Text(
+            'Part A: read the widget tree of the $course board from top to bottom.',
+            key: const Key('sum-a'),
+          ),
         ),
-        Text(
-          'Part B: build each box from small widgets and never extend a built-in class.',
-          key: const Key('sum-b'),
+        Expanded(
+          child: Text(
+            'Part B: build each box from small widgets and never extend a built-in class.',
+            key: const Key('sum-b'),
+          ),
         ),
-        Text(
-          'Part C: break the layout on purpose, then fix it with Expanded or Wrap.',
-          key: const Key('sum-c'),
+        Expanded(
+          child: Text(
+            'Part C: break the layout on purpose, then fix it with Expanded or Wrap.',
+            key: const Key('sum-c'),
+          ),
         ),
       ],
     );
@@ -320,7 +330,6 @@ class InfoPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Map seeded string name to actual MainAxisAlignment enum
     MainAxisAlignment getRowMainAxis(String name) {
       switch (name) {
         case 'center':
@@ -339,7 +348,6 @@ class InfoPanel extends StatelessWidget {
       }
     }
 
-    // Map seeded string name to actual CrossAxisAlignment enum
     CrossAxisAlignment getColumnCrossAxis(String name) {
       switch (name) {
         case 'center':
@@ -378,6 +386,12 @@ class InfoPanel extends StatelessWidget {
     );
   }
 }
+
+/*
+  Think Question Answer 7:
+  - Why does wrapping a Text in Expanded make it wrap its words? Use the idea “constraints go down, sizes go up”.
+    Following the rule that "constraints go down, sizes go up", an unconstrained Row gives its children infinite horizontal space to grow, causing text to overflow off-screen. When you wrap a `Text` in `Expanded`, the `Row` passes tight or bounded maximum width constraints down to the `Expanded` widget, which forces the `Text` to respect that maximum width boundary and wrap its text content across multiple lines.
+*/
 
 /*
   Think Question Answer 6:
