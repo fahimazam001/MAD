@@ -99,7 +99,9 @@ class HomePage extends StatelessWidget {
             const SizedBox(height: 12),
             const Clock(),
             const SizedBox(height: 12),
-            const SwapBoard(), // Step 5.2 (Replaced temporary Row)
+            const SwapBoard(), // Step 5.2
+            const SizedBox(height: 12),
+            const InfoPanel(), // Step 6.1
             const SizedBox(height: 12),
             // Add each new widget BELOW the previous one, in the order the
             // steps tell you, with a SizedBox(height: 12) between widgets.
@@ -217,7 +219,7 @@ class Probe extends StatelessWidget {
     final bool above = context.findAncestorWidgetOfExactType<Scaffold>() != null;
 
     return Column(
-      crossAxisAlignment: crossorigin_error_fix_placeholder_skip ?? CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text('Seen at: $seconds s', key: const Key('probe-seen')),
         Text('Widget #${identityHashCode(this)}', key: const Key('probe-widget')),
@@ -309,6 +311,79 @@ class _SwapBoardState extends State<SwapBoard> {
     );
   }
 }
+
+// ==========================================
+// Step 6: InfoPanel Widget
+// ==========================================
+class InfoPanel extends StatelessWidget {
+  const InfoPanel({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    // Map seeded string name to actual MainAxisAlignment enum
+    MainAxisAlignment getRowMainAxis(String name) {
+      switch (name) {
+        case 'center':
+          return MainAxisAlignment.center;
+        case 'end':
+          return MainAxisAlignment.end;
+        case 'spaceBetween':
+          return MainAxisAlignment.spaceBetween;
+        case 'spaceAround':
+          return MainAxisAlignment.spaceAround;
+        case 'spaceEvenly':
+          return MainAxisAlignment.spaceEvenly;
+        case 'start':
+        default:
+          return MainAxisAlignment.start;
+      }
+    }
+
+    // Map seeded string name to actual CrossAxisAlignment enum
+    CrossAxisAlignment getColumnCrossAxis(String name) {
+      switch (name) {
+        case 'center':
+          return CrossAxisAlignment.center;
+        case 'end':
+          return CrossAxisAlignment.end;
+        case 'start':
+        default:
+          return CrossAxisAlignment.start;
+      }
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          key: const Key('info-row'),
+          mainAxisAlignment: getRowMainAxis(mainName),
+          children: [
+            Text('Start: $startSec s', key: const Key('row-a')),
+            Text('Tick: $tick s', key: const Key('row-b')),
+            Text('Stop: $stopAt s', key: const Key('row-c')),
+          ],
+        ),
+        const SizedBox(height: 12),
+        Column(
+          key: const Key('info-col'),
+          crossAxisAlignment: getColumnCrossAxis(crossName),
+          children: [
+            Text('Name: $studentName', key: const Key('col-a')),
+            Text('Roll no: $rollNo', key: const Key('col-b')),
+            Text('Course: $course', key: const Key('col-c')),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+/*
+  Think Question Answer 6:
+  - In a Column, which axis is the main axis? Why does crossAxisAlignment: CrossAxisAlignment.center in a Column move the children left or right and not up or down?
+    In a Column, the main axis is the **vertical axis** (top-to-bottom). Therefore, the cross axis is the **horizontal axis** (left-to-right). Setting `crossAxisAlignment: CrossAxisAlignment.center` aligns children along the cross axis, which runs horizontally across the width of the screen, moving them left or right rather than up or down.
+*/
 
 /*
   Think Question Answer 5:
