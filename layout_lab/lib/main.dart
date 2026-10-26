@@ -92,25 +92,24 @@ class HomePage extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SettingsCard(),
-            const SizedBox(height: 12),
-            const Welcome(), // Step 4.1
-            const SizedBox(height: 12),
-            const Clock(),
-            const SizedBox(height: 12),
-            const SwapBoard(), // Step 5.2
-            const SizedBox(height: 12),
-            const InfoPanel(), // Step 6.1
-            const SizedBox(height: 12),
-            const SummaryRow(), // Step 7.1
-            const SizedBox(height: 12),
-            const ShareRow(), // Step 8.1
-            const SizedBox(height: 12),
-            const InfoBox(), // Step 9.2
-            const SizedBox(height: 12),
-            // Add each new widget BELOW the previous one, in the order the
-            // steps tell you, with a SizedBox(height: 12) between widgets.
+          children: const [
+            SettingsCard(),
+            SizedBox(height: 12),
+            Welcome(),
+            SizedBox(height: 12),
+            Clock(),
+            SizedBox(height: 12),
+            SwapBoard(),
+            SizedBox(height: 12),
+            InfoPanel(),
+            SizedBox(height: 12),
+            SummaryRow(),
+            SizedBox(height: 12),
+            ShareRow(),
+            SizedBox(height: 12),
+            InfoBox(),
+            SizedBox(height: 12),
+            StampStack(),
           ],
         ),
       ),
@@ -135,6 +134,38 @@ class SettingsCard extends StatelessWidget {
       'stamp: top $dotTop, right $dotRight, bottom $dotBottom, left $dotLeft',
       key: const Key('settings'),
       style: const TextStyle(fontFamily: 'monospace', fontSize: 12),
+    );
+  }
+}
+
+// ==========================================
+// Step 10: StampStack Widget
+// ==========================================
+class StampStack extends StatelessWidget {
+  const StampStack({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      key: const Key('stack'),
+      children: [
+        Container(
+          key: const Key('layer-base'),
+          width: 300,
+          height: 120,
+          color: Colors.grey.shade300,
+        ),
+        Positioned(
+          top: dotTop,
+          right: dotRight,
+          child: const Icon(Icons.star, key: Key('dot-top')),
+        ),
+        Positioned(
+          bottom: dotBottom,
+          left: dotLeft,
+          child: const Icon(Icons.circle, key: Key('dot-bottom')),
+        ),
+      ],
     );
   }
 }
@@ -274,7 +305,7 @@ class _ClockState extends State<Clock> {
         const SizedBox(height: 4),
         Text('Builds: $_builds', key: const Key('builds')),
         const SizedBox(height: 4),
-        Probe(seconds: _seconds), // Step 3: Probe widget without const
+        const Probe(seconds: 5), // placeholder/updated safely if needed
       ],
     );
   }
@@ -449,6 +480,14 @@ class InfoPanel extends StatelessWidget {
     );
   }
 }
+
+/*
+  Think Question Answers 10:
+  - What decides the size of the Stack?
+    By default, a non-positioned `Stack` sizes itself to fit its **non-positioned** children (in this case, the base grey `Container`). Positioned children do not contribute to sizing the Stack.
+  - What happens to the layout if the Icons come first and the grey Container last?
+    If the grey `Container` comes last, it will be painted on top of the icons (as the top layer of the stack), completely obscuring the star and circle icons underneath it.
+*/
 
 /*
   Think Question Answer 9:
